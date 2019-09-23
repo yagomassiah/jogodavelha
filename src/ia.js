@@ -17,7 +17,7 @@ function checaVitoria(board) {
     i = 1;
     if (board[i] == "O" && board[i + 3] == "O" && board[i + 6] == "O")
         return true;
-    i = 3;
+    i = 2;
     if (board[i] == "O" && board[i + 3] == "O" && board[i + 6] == "O")
         return true;
 
@@ -115,37 +115,40 @@ function melhoresJ(jogadasPossiveis) {
 
     let melhoresJogadas = [];
     let maxPossibilidades = 0;
+
     jogadasPossiveis.forEach(element => {
         if (checaVitoria(element)) {
             maxPossibilidades = 100000;
             melhoresJogadas = [];
             melhoresJogadas.push({
-                valor: possibilidades,
-                board: element
-            });
-
-        }
-
-        let possibilidades = calculaPossibilidades(element);
-        console.log(possibilidades);
-        if (possibilidades > maxPossibilidades) {
-            melhoresJogadas = [];
-            maxPossibilidades = possibilidades;
-            melhoresJogadas.push({
-                valor: possibilidades,
-                board: element
-            });
-        } else if (possibilidades == maxPossibilidades) {
-            maxPossibilidades = possibilidades;
-            console.log("Possibilidades: " + possibilidades);
-            console.log("Max Possibilidades: " + maxPossibilidades);
-            melhoresJogadas.push({
-                valor: possibilidades,
+                valor: 100000,
                 board: element
             });
         }
     });
 
+    if (maxPossibilidades < 100000) {
+        jogadasPossiveis.forEach(element => {
+            let possibilidades = calculaPossibilidades(element);
+            console.log(possibilidades);
+            if (possibilidades > maxPossibilidades) {
+                melhoresJogadas = [];
+                maxPossibilidades = possibilidades;
+                melhoresJogadas.push({
+                    valor: possibilidades,
+                    board: element
+                });
+            } else if (possibilidades == maxPossibilidades) {
+                maxPossibilidades = possibilidades;
+                console.log("Possibilidades: " + possibilidades);
+                console.log("Max Possibilidades: " + maxPossibilidades);
+                melhoresJogadas.push({
+                    valor: possibilidades,
+                    board: element
+                });
+            }
+        });
+    }
     melhoresJogadas.sort(function (a, b) {
         return a.valor - b.valor
     });
