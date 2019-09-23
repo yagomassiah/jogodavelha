@@ -64,15 +64,68 @@ function jogadasP(board) {
     return jogadasPossiveis;
 
 }
+function calculaPossibilidades(board) {
+    let i = 0;
+    let count = 0;
+    if (board[i] == "O" || board[i + 1] == "O" || board[i + 2] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 1] == "O" || board[i + 1] == null) && (board[i + 2] == "O" || board[i + 2] == null))
+            count++;
+    }
+    i = 3;
+    if (board[i] == "O" || board[i + 1] == "O" || board[i + 2] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 1] == "O" || board[i + 1] == null) && (board[i + 2] == "O" || board[i + 2] == null))
+            count++;
+    }
+    i = 6;
+    if (board[i] == "O" || board[i + 1] == "O" || board[i + 2] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 1] == "O" || board[i + 1] == null) && (board[i + 2] == "O" || board[i + 2] == null))
+            count++;
+    }
+    i = 0;
 
+    if (board[i] == "O" || board[i + 3] == "O" || board[i + 6] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 3] == "O" || board[i + 3] == null) && (board[i + 6] == "O" || board[i + 6] == null))
+            count++;
+    }
+    i = 1;
+    if (board[i] == "O" || board[i + 3] == "O" || board[i + 6] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 3] == "O" || board[i + 3] == null) && (board[i + 6] == "O" || board[i + 6] == null))
+            count++;
+    }
+    i = 2;
+
+    if (board[i] == "O" || board[i + 3] == "O" || board[i + 6] == "O") {
+        if ((board[i] == "O" || board[i] == null) && (board[i + 3] == "O" || board[i + 3] == null) && (board[i + 6] == "O" || board[i + 6] == null))
+            count++;
+    }
+
+    if (board[0] == "O" || board[4] == "O" || board[8] == "O") {
+        if ((board[0] == "O" || board[0] == null) && (board[4] == "O" || board[4] == null) && (board[8] == "O" || board[8] == null))
+            count++;
+    }
+
+    if (board[2] == "O" || board[4] == "O" || board[6] == "O") {
+        if ((board[2] == "O" || board[2] == null) && (board[4] == "O" || board[4] == null) && (board[6] == "O" || board[6] == null))
+            count++;
+    }
+
+    return count;
+}
 function melhoresJ(jogadasPossiveis) {
 
-    const melhoresJogadas = [];
+    let melhoresJogadas = [];
     let maxPossibilidades = 0;
     jogadasPossiveis.forEach(element => {
-        let possibilidades = possibilidadesVitoria(element);
-        // console.log(possibilidades);
-        if (possibilidades >= maxPossibilidades) {
+        let possibilidades = calculaPossibilidades(element);
+        console.log(possibilidades);
+        if (possibilidades > maxPossibilidades) {
+            melhoresJogadas = [];
+            maxPossibilidades = possibilidades;
+            melhoresJogadas.push({
+                valor: possibilidades,
+                board: element
+            });
+        } else if (possibilidades == maxPossibilidades) {
             maxPossibilidades = possibilidades;
             console.log("Possibilidades: " + possibilidades);
             console.log("Max Possibilidades: " + maxPossibilidades);
@@ -82,7 +135,7 @@ function melhoresJ(jogadasPossiveis) {
             });
         }
     });
-   
+
     melhoresJogadas.sort(function (a, b) {
         return a.valor - b.valor
     });
