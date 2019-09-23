@@ -1,0 +1,107 @@
+
+function checaVitoria(board) {
+    let i = 0;
+
+    if (board[i] == "O" && board[i + 1] == "O" && board[i + 2] == "O")
+        return true;
+    i = 3;
+    if (board[i] == "O" && board[i + 1] == "O" && board[i + 2] == "O")
+        return true;
+    i = 6;
+    if (board[i] == "O" && board[i + 1] == "O" && board[i + 2] == "O")
+        return true;
+
+    i = 0;
+    if (board[i] == "O" && board[i + 3] == "O" && board[i + 6] == "O")
+        return true;
+    i = 1;
+    if (board[i] == "O" && board[i + 3] == "O" && board[i + 6] == "O")
+        return true;
+    i = 3;
+    if (board[i] == "O" && board[i + 3] == "O" && board[i + 6] == "O")
+        return true;
+
+
+    if (board[0] == "O" && board[4] == "O" && board[8] == "O")
+        return true;
+
+
+    if (board[2] == "O" && board[4] == "O" && board[6] == "O")
+        return true;
+
+    return false;
+
+}
+function possibilidadesVitoria(board) {
+    let count = 0;
+    if (checaVitoria(board))
+        return 1;
+    else if (!jogadasP(board))
+        return count;
+    else {
+        let jogadas = jogadasP(board);
+        //console.log(jogadas.length);
+        jogadas.forEach(element => {
+            //checaVitoria(element);
+            count += possibilidadesVitoria(element);
+        });
+    }
+    return count;
+}
+function jogadasP(board) {
+    const jogadasPossiveis = [];
+    //const boardx = board.slice();
+    for (let i = 0; i < board.length; i++) {
+
+        if (!board[i]) {
+            let novaJogada = board.slice();
+            novaJogada[i] = "O";
+            jogadasPossiveis.push(novaJogada);
+        }
+
+    }
+
+    return jogadasPossiveis;
+
+}
+
+function melhoresJ(jogadasPossiveis) {
+
+    const melhoresJogadas = [];
+    let maxPossibilidades = 0;
+    jogadasPossiveis.forEach(element => {
+        let possibilidades = possibilidadesVitoria(element);
+        // console.log(possibilidades);
+        if (possibilidades >= maxPossibilidades) {
+            maxPossibilidades = possibilidades;
+            console.log("Possibilidades: " + possibilidades);
+            console.log("Max Possibilidades: " + maxPossibilidades);
+            melhoresJogadas.push({
+                valor: possibilidades,
+                board: element
+            });
+        }
+    });
+   
+    melhoresJogadas.sort(function (a, b) {
+        return a.valor - b.valor
+    });
+    console.log(melhoresJogadas);
+    return melhoresJogadas;
+
+}
+export function iaMove(squares, index) {
+    var newSquares = squares.slice();
+    const jogadasPossiveis = jogadasP(newSquares);
+    //console.log(jogadasPossiveis);
+
+    //  let number = Math.round(Math.random() * (jogadasPossiveis.length - 1))
+    // const jogadaSelecionada = jogadasPossiveis[number];
+    const melhoresJogadas = melhoresJ(jogadasPossiveis);
+    const jogadaSelecionada = melhoresJogadas[0].board;
+    console.log(checaVitoria(jogadaSelecionada));
+    if (checaVitoria(jogadaSelecionada))
+        console.log(jogadaSelecionada);
+    return jogadaSelecionada;
+
+}

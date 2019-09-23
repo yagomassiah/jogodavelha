@@ -17,7 +17,6 @@ function isValidJSON(jsonString) {
     return false;
   }
 }
-
 export default {
   props: ['handleLoadGameClick'],
   data() {

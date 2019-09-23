@@ -1,11 +1,8 @@
 <template>
   <div class="table">
-    <div class="table-cell table-small-padding">
-      <h1>Ultimate tic-tac-toe in Vue!</h1>
-      <ultimate-game />
-    </div>
+    
     <div class="table-cell table-large-padding">
-      <h2>The classic!</h2>
+      <h2>Jogo da velha</h2>
       <game />
     </div>
   </div>

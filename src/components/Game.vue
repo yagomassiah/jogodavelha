@@ -1,81 +1,75 @@
 <template>
   <div class="game">
     <div class="game-board">
-      <board :squares="history[currentStep].squares" @square-click="handleSquareClick" />
+      <board :squares="squares" @square-click="handleSquareClick" />
     </div>
     <div class="game-info">
       <status :description="description" :player="player" />
-      <ol>
-        <li v-for="(item, moveIndex) in history" :key="moveIndex">
-          <time-travel-button
-            :move-index="moveIndex"
-            :current-step="currentStep"
-            :on-click="() => { jumpTo(moveIndex) }"
-          />
-        </li>
-      </ol>
     </div>
+    <button @click="restart"> Recomeçar </button>
   </div>
 </template>
 
 <script>
-import Board from './Board.vue';
-import Status from './Status.vue';
-import TimeTravelButton from './TimeTravelButton.vue';
-import { calculateWinner } from '../helpers';
-
+import Board from "./Board.vue";
+import Status from "./Status.vue";
+import TimeTravelButton from "./TimeTravelButton.vue";
+import { calculateWinner } from "../helpers";
+import { iaMove } from "../ia";
 export default {
   components: {
     board: Board,
     status: Status,
-    'time-travel-button': TimeTravelButton,
+    "time-travel-button": TimeTravelButton
   },
   data() {
     return {
-      history: [
-        { squares: Array(9).fill(null) },
-      ],
-      xIsNext: true,
-      currentStep: 0,
+      squares: Array(9).fill(null),
+      xIsNext: true
     };
   },
   computed: {
     description: function description() {
-      const { history, currentStep } = this;
-      const { squares } = history[currentStep];
-
-      return calculateWinner(squares) ? 'Winner' : 'Next player';
+     // const { history, currentStep } = this;
+      const  squares  = this.squares;
+      return calculateWinner(this.squares) ? 'Ganhador' : 'Próximo Jogador';
     },
     player: function player() {
       const { history, xIsNext, currentStep } = this;
-      const { squares } = history[currentStep];
+      const squares = this.squares;
 
-      return calculateWinner(squares) || (xIsNext ? 'X' : 'O');
-    },
+      return calculateWinner(squares) || (xIsNext ? "X" : "O");
+    }
   },
   methods: {
     handleSquareClick: function handleSquareClick(squareIndex) {
-      const { history, xIsNext, currentStep } = this;
-      const gameHistory = history.slice(0, currentStep + 1);
-      const { squares } = gameHistory[currentStep];
+      
+      // const newGameState = gameState.slice(0, currentStep + 1);
+      //const { squares } = gameState;
 
-      if (calculateWinner(squares) || squares[squareIndex]) {
+      if (calculateWinner(this.squares) || this.squares[squareIndex]) {
         return;
       }
+      const newSquares = this.squares.slice();
+      newSquares[squareIndex] = this.xIsNext ? "X" : "O";
+      this.squares = newSquares;
+      this.xIsNext = !this.xIsNext;
 
-      const newSquares = squares.slice();
-
-      newSquares[squareIndex] = xIsNext ? 'X' : 'O';
-      gameHistory.push({ squares: newSquares });
-
-      this.history = gameHistory;
-      this.xIsNext = !xIsNext;
-      this.currentStep += 1;
+      if (calculateWinner(this.squares)) {
+        return;
+      }
+      this.squares = iaMove(this.squares);
+      this.xIsNext = !this.xIsNext;
+      //iaMove(this.gameState);
+    },
+    restart(){
+      this.squares = Array(9).fill(null);
+      this.xIsNext = true;
     },
     jumpTo: function jumpTo(stepNumber) {
       this.currentStep = stepNumber;
       this.xIsNext = stepNumber % 2 === 0;
-    },
-  },
+    }
+  }
 };
 </script>
