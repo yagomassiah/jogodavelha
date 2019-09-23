@@ -116,6 +116,16 @@ function melhoresJ(jogadasPossiveis) {
     let melhoresJogadas = [];
     let maxPossibilidades = 0;
     jogadasPossiveis.forEach(element => {
+        if (checaVitoria(element)) {
+            maxPossibilidades = 100000;
+            melhoresJogadas = [];
+            melhoresJogadas.push({
+                valor: possibilidades,
+                board: element
+            });
+
+        }
+
         let possibilidades = calculaPossibilidades(element);
         console.log(possibilidades);
         if (possibilidades > maxPossibilidades) {
